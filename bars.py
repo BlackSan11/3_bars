@@ -1,5 +1,6 @@
 ﻿import json
 import math
+import sys
 
 #выгружаем JSON из файла
 def load_data_from_file(filepath):
@@ -11,14 +12,17 @@ def load_data_from_file(filepath):
 #ищем самый вместительный бар
 def get_biggest_bar(json_data):
     all_bars = json_data['features']
-    biggest_bars = []
     bar = max(all_bars, key=lambda x: x['properties']['Attributes']['SeatsCount'])
     return bar
 
 def get_smallest_bar(json_data):
     all_bars = json_data['features']
-    biggest_bars = []
     bar = min(all_bars, key=lambda x: x['properties']['Attributes']['SeatsCount'])
+    return bar
+
+def get_closest_bar(json_data, me_X_coordinate, me_Y_coordinate):
+    all_bars = json_data['features']
+    bar = min(all_bars, key=lambda x: math.sqrt(((me_X_coordinate - x['geometry']['coordinates'][0])**2) + ((me_Y_coordinate - x['geometry']['coordinates'][1])**2)))
     return bar
 
 if __name__ == '__main__':
@@ -30,9 +34,4 @@ if __name__ == '__main__':
             datatmin['properties']['Attributes']['Name'], datatmin['properties']['Attributes']['SeatsCount'],
             datatmin['properties']['Attributes']['Address'],
             datatmin['properties']['Attributes']['PublicPhone'][0]['PublicPhone']))
-    print(datat['geometry']['coordinates'][0], datat['geometry']['coordinates'][0])
-    tempX = 37.582437591897381
-    tempY = 55.843665951674964
-    distance1 = ((tempX - datat['geometry']['coordinates'][0])**2) + ((tempY - datat['geometry']['coordinates'][1])**2)
-    distance1 = math.sqrt(distance1)
-    print(distance1)
+    print(get_closest_bar(load_data_from_file(sys.argv[1]), sys.argv[2], sys.argv[3]))
