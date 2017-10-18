@@ -2,7 +2,14 @@ import json
 import math
 import argparse
 
-parser = argparse.ArgumentParser(description='Great Description To Be Here')
+
+def create_parser():
+    parser = argparse.ArgumentParser(description='--> Bar analys <--')
+    parser.add_argument("-c", nargs=2, type=float,
+                        help="get closset bar. Plese input your coordinate")
+    parser.add_argument("path", help="path to json file")
+    return parser
+
 
 def load_data_from_file(filepath):
     with open(filepath, "r", encoding="utf-8") as file_with_json:
@@ -32,10 +39,12 @@ def get_closest_bar(json_data, me_longitude, me_latitude):
 
 
 if __name__ == '__main__':
-    json_from_file = load_data_from_file(sys.argv[1])
+    parser = create_parser()
+    args = parser.parse_args()
+    json_from_file = load_data_from_file(args.path)
     biggest_bar = get_biggest_bar(json_from_file)
     smallest_bar = get_smallest_bar(json_from_file)
-    closest_bar = get_closest_bar(json_from_file, sys.argv[3], sys.argv[2])
+    closest_bar = get_closest_bar(json_from_file, args.c[0], args.c[0])
     print(
         "Хотите много места? Тогда вам в \"{}\" в нем {} мест, "
         "он находится по адресу: г. Москва, {}, телефон - +7 {}".format(
