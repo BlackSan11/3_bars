@@ -4,10 +4,11 @@ import argparse
 
 
 def create_parser():
-    parser = argparse.ArgumentParser(description='--> Bar analys <--')
+    parser = argparse.ArgumentParser(
+        description='Get biggest, smallest and closest bars of Moscow')
     parser.add_argument("-c", nargs=2, type=float,
-                        help="get closset bar. Plese input your coordinate")
-    parser.add_argument("path", help="path to json file")
+                        help="Plese input your coordinate")
+    parser.add_argument("path", help="Plese input your path to json file")
     return parser
 
 
@@ -17,23 +18,23 @@ def load_data_from_file(filepath):
         return json_from_file['features']
 
 
-def get_biggest_bar(json_data):
-    bar = max(json_data,
+def get_biggest_bar(all_bars):
+    bar = max(all_bars,
               key=lambda x: x['properties']['Attributes']['SeatsCount'])
     return bar['properties']['Attributes']
 
 
-def get_smallest_bar(json_data):
-    bar = min(json_data,
+def get_smallest_bar(all_bars):
+    bar = min(all_bars,
               key=lambda x: x['properties']['Attributes']['SeatsCount'])
     return bar['properties']['Attributes']
 
 
-def get_closest_bar(json_data, me_longitude, me_latitude):
-    bar = min(json_data,
-              key=lambda x: math.sqrt(((float(me_longitude) -
+def get_closest_bar(all_bars, my_longitude, my_latitude):
+    bar = min(all_bars,
+              key=lambda x: math.sqrt(((my_longitude -
                                         x['geometry']['coordinates'][0])**2) +
-                                      ((float(me_latitude) -
+                                      ((my_latitude -
                                         x['geometry']['coordinates'][1])**2)))
     return bar['properties']['Attributes']
 
